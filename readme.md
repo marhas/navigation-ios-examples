@@ -1,9 +1,10 @@
 # Mapbox Navigation SDK Examples
 
+[![CircleCI](https://circleci.com/gh/mapbox/navigation-ios-examples.svg?style=svg)](https://circleci.com/gh/mapbox/navigation-ios-examples)
+
 A collection of examples showing off the [Mapbox Navigation SDK](https://github.com/mapbox/mapbox-navigation-ios).
 
-![](https://user-images.githubusercontent.com/1058624/34502971-fac695b4-efca-11e7-9eb1-426f38bd89bf.gif)
-
+![](https://user-images.githubusercontent.com/1496498/88307292-9db6a000-ccc0-11ea-9507-74c2e918dd98.gif)
 
 ## Installation
 
@@ -19,8 +20,8 @@ _Installation with CocoaPods_
 
 ## Add an example:
 
-1. Add the example to [`/Examples`](https://github.com/mapbox/navigation-ios-examples/tree/master/Navigation-Examples/Examples).
-1. Add the example name to the [`Constants.swift`](https://github.com/mapbox/navigation-ios-examples/blob/master/Navigation-Examples/Constants.swift).
+1. Add the example to [`/Examples`](https://github.com/mapbox/navigation-ios-examples/tree/main/Navigation-Examples/Examples).
+1. Add the example name to the [`Constants.swift`](https://github.com/mapbox/navigation-ios-examples/blob/main/Navigation-Examples/Constants.swift).
 1. Run the app.
 
 ## Additional resources

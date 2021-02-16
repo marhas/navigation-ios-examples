@@ -10,29 +10,30 @@ class CustomStyleUIElements: UIViewController {
         
         let origin = CLLocationCoordinate2DMake(37.77440680146262, -122.43539772352648)
         let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
-        let options = NavigationRouteOptions(coordinates: [origin, destination])
+        let routeOptions = NavigationRouteOptions(coordinates: [origin, destination])
         
-        Directions.shared.calculate(options) { (waypoints, routes, error) in
-            guard let route = routes?.first, error == nil else {
-                print(error!.localizedDescription)
-                return
+        Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
+            switch result {
+            case .failure(let error):
+                print(error.localizedDescription)
+            case .success(let response):
+                guard let route = response.routes?.first, let strongSelf = self else {
+                    return
+                }
+                
+                // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
+                let navigationService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, simulating: simulationIsEnabled ? .always : .onPoorGPS)
+                let navigationOptions = NavigationOptions(styles: [CustomDayStyle(), CustomNightStyle()], navigationService: navigationService)
+                let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navigationOptions)
+                navigationViewController.modalPresentationStyle = .fullScreen
+                // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
+                navigationViewController.routeLineTracksTraversal = true
+                
+                strongSelf.present(navigationViewController, animated: true, completion: nil)
             }
-            
-            let navigationController = NavigationViewController(for: route, styles: [CustomDayStyle(), CustomNightStyle()])
-            
-            // This allows the developer to simulate the route.
-            // Note: If copying and pasting this code in your own project,
-            // comment out `simulationIsEnabled` as it is defined elsewhere in this project.
-            if simulationIsEnabled {
-                navigationController.routeController.locationManager = SimulatedLocationManager(route: route)
-            }
-            
-            self.present(navigationController, animated: true, completion: nil)
         }
     }
 }
-
-
 
 class CustomDayStyle: DayStyle {
     
@@ -55,7 +56,6 @@ class CustomDayStyle: DayStyle {
         super.apply()
         ArrivalTimeLabel.appearance().textColor = lightGrayColor
         BottomBannerView.appearance().backgroundColor = secondaryBackgroundColor
-        BottomBannerContentView.appearance().backgroundColor = secondaryBackgroundColor
         Button.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         CancelButton.appearance().tintColor = lightGrayColor
         DistanceLabel.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).unitTextColor = secondaryLabelColor
@@ -67,7 +67,6 @@ class CustomDayStyle: DayStyle {
         FloatingButton.appearance().backgroundColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 1)
         FloatingButton.appearance().tintColor = blueColor
         InstructionsBannerView.appearance().backgroundColor = backgroundColor
-        InstructionsBannerContentView.appearance().backgroundColor = backgroundColor
         LanesView.appearance().backgroundColor = darkBackgroundColor
         LaneView.appearance().primaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         ManeuverView.appearance().backgroundColor = backgroundColor
@@ -87,6 +86,8 @@ class CustomDayStyle: DayStyle {
         NavigationMapView.appearance().trafficModerateColor = #colorLiteral(red: 1, green: 0.6184511781, blue: 0, alpha: 1)
         NavigationMapView.appearance().trafficSevereColor = #colorLiteral(red: 0.7458544374, green: 0.0006075350102, blue: 0, alpha: 1)
         NavigationMapView.appearance().trafficUnknownColor = blueColor
+        // Customize the color that appears on the traversed section of a route
+        NavigationMapView.appearance().traversedRouteColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.5)
         PrimaryLabel.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = primaryLabelColor
         PrimaryLabel.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).normalTextColor = darkGrayColor
         ResumeButton.appearance().backgroundColor = secondaryBackgroundColor
@@ -100,7 +101,6 @@ class CustomDayStyle: DayStyle {
         WayNameView.appearance().backgroundColor = secondaryBackgroundColor
     }
 }
-
 
 class CustomNightStyle: NightStyle {
     
@@ -123,7 +123,6 @@ class CustomNightStyle: NightStyle {
         super.apply()
         DistanceRemainingLabel.appearance().normalTextColor = primaryTextColor
         BottomBannerView.appearance().backgroundColor = secondaryBackgroundColor
-        BottomBannerContentView.appearance().backgroundColor = secondaryBackgroundColor
         FloatingButton.appearance().backgroundColor = #colorLiteral(red: 0.1434620917, green: 0.1434366405, blue: 0.1819391251, alpha: 0.9037466989)
         TimeRemainingLabel.appearance().textColor = primaryTextColor
         TimeRemainingLabel.appearance().trafficLowColor = primaryTextColor

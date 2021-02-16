@@ -3,71 +3,75 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
+import MapboxSpeech
 import AVFoundation
 
 class CustomVoiceControllerUI: UIViewController {
     
-    var voiceController: CustomVoiceController?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        voiceController = CustomVoiceController()
-        
         let origin = CLLocationCoordinate2DMake(37.77440680146262, -122.43539772352648)
         let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
-        let options = NavigationRouteOptions(coordinates: [origin, destination])
+        let routeOptions = NavigationRouteOptions(coordinates: [origin, destination])
         
-        Directions.shared.calculate(options) { (waypoints, routes, error) in
-            guard let route = routes?.first, error == nil else {
-                print(error!.localizedDescription)
-                return
+        Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
+            switch result {
+            case .failure(let error):
+                print(error.localizedDescription)
+            case .success(let response):
+                guard let route = response.routes?.first, let strongSelf = self else {
+                    return
+                }
+                
+                // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
+                let navigationService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, simulating: simulationIsEnabled ? .always : .onPoorGPS)
+                
+                // `MultiplexedSpeechSynthesizer` will provide "a backup" functionality to cover cases, which
+                // our custom implementation cannot handle.
+                let speechSynthesizer = MultiplexedSpeechSynthesizer([CustomVoiceController(), SystemSpeechSynthesizer()] as? [SpeechSynthesizing])
+                let routeVoiceController = RouteVoiceController(navigationService: navigationService, speechSynthesizer: speechSynthesizer)
+                // Remember to pass our `Voice Controller` to `Navigation Options`!
+                let navigationOptions = NavigationOptions(navigationService: navigationService, voiceController: routeVoiceController)
+                
+                let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navigationOptions)
+                navigationViewController.modalPresentationStyle = .fullScreen
+                
+                strongSelf.present(navigationViewController, animated: true, completion: nil)
             }
-            
-            let navigationController = NavigationViewController(for: route)
-            navigationController.voiceController = self.voiceController
-            
-            // This allows the developer to simulate the route.
-            // Note: If copying and pasting this code in your own project,
-            // comment out `simulationIsEnabled` as it is defined elsewhere in this project.
-            if simulationIsEnabled {
-                navigationController.routeController.locationManager = SimulatedLocationManager(route: route)
-            }
-            
-            self.present(navigationController, animated: true, completion: nil)
         }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        voiceController = nil
     }
 }
 
-class CustomVoiceController: MapboxVoiceController {
+class CustomVoiceController: MapboxSpeechSynthesizer {
     
     // You will need audio files for as many or few cases as you'd like to handle
-    // This example just covers left, right and straight.
+    // This example just covers left and right. All other cases will fail the Custom Voice Controller and force a backup System Speech to kick in
     let turnLeft = NSDataAsset(name: "turnleft")!.data
     let turnRight = NSDataAsset(name: "turnright")!.data
-    let straight = NSDataAsset(name: "continuestraight")!.data
     
-    override func didPassSpokenInstructionPoint(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        let soundForInstruction = audio(for: routeProgress.currentLegProgress.currentStep)
-        play(soundForInstruction)
+    override func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale? = nil) {
+
+        guard let soundForInstruction = audio(for: legProgress.currentStep) else {
+            // When `MultiplexedSpeechSynthesizer` receives an error from one of it's Speech Synthesizers,
+            // it requests the next on the list
+            delegate?.speechSynthesizer(self,
+                                        didSpeak: instruction,
+                                        with: SpeechError.noData(instruction: instruction,
+                                                                 options: SpeechOptions(text: instruction.text)))
+            return
+        }
+        speak(instruction, data: soundForInstruction)
     }
     
-    func audio(for step: RouteStep) -> Data {
+    func audio(for step: RouteStep) -> Data? {
         switch step.maneuverDirection {
         case .left:
             return turnLeft
         case .right:
             return turnRight
         default:
-            return straight
+            return nil // this will force report that Custom View Controller is unable to handle this case
         }
     }
 }
-
-

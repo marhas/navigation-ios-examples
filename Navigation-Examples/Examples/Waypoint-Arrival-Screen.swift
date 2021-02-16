@@ -13,25 +13,26 @@ class WaypointArrivalScreenViewController: UIViewController {
         let waypointTwo = Waypoint(coordinate: CLLocationCoordinate2DMake(37.776087132342745, -122.4329173564911))
         let waypointThree = Waypoint(coordinate: CLLocationCoordinate2DMake(37.775357832637184, -122.43493974208832))
         
-        let options = NavigationRouteOptions(waypoints: [waypointOne, waypointTwo, waypointThree])
+        let routeOptions = NavigationRouteOptions(waypoints: [waypointOne, waypointTwo, waypointThree])
         
-        Directions.shared.calculate(options) { (waypoints, routes, error) in
-            guard let route = routes?.first, error == nil else {
-                print(error!.localizedDescription)
-                return
+        Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
+            switch result {
+            case .failure(let error):
+                print(error.localizedDescription)
+            case .success(let response):
+                guard let route = response.routes?.first, let strongSelf = self else {
+                    return
+                }
+                
+                // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
+                let navigationService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, simulating: simulationIsEnabled ? .always : .onPoorGPS)
+                let navigationOptions = NavigationOptions(navigationService: navigationService)
+                let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navigationOptions)
+                navigationViewController.modalPresentationStyle = .fullScreen
+                navigationViewController.delegate = strongSelf
+                
+                strongSelf.present(navigationViewController, animated: true, completion: nil)
             }
-            
-            let navigationController = NavigationViewController(for: route)
-            navigationController.delegate = self
-            
-            // This allows the developer to simulate the route.
-            // Note: If copying and pasting this code in your own project,
-            // comment out `simulationIsEnabled` as it is defined elsewhere in this project.
-            if simulationIsEnabled {
-                navigationController.routeController.locationManager = SimulatedLocationManager(route: route)
-            }
-            
-            self.present(navigationController, animated: true, completion: nil)
         }
     }
 }
@@ -39,13 +40,25 @@ class WaypointArrivalScreenViewController: UIViewController {
 extension WaypointArrivalScreenViewController: NavigationViewControllerDelegate {
     // Show an alert when arriving at the waypoint and wait until the user to start next leg.
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
-        let alert = UIAlertController(title: "Arrived at \(String(describing: waypoint.name))", message: "Would you like to continue?", preferredStyle: .alert)
+        let isFinalLeg = navigationViewController.navigationService.routeProgress.isFinalLeg
+        if isFinalLeg {
+            return true
+        }
+        
+        let alert = UIAlertController(title: "Arrived at \(waypoint.name ?? "Unknown").", message: "Would you like to continue?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { action in
             // Begin the next leg once the driver confirms
-            navigationViewController.routeController.routeProgress.legIndex += 1
+            if !isFinalLeg {
+                navigationViewController.navigationService.routeProgress.legIndex += 1
+                navigationViewController.navigationService.start()
+            }
         }))
         navigationViewController.present(alert, animated: true, completion: nil)
         
         return false
+    }
+    
+    func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
+        dismiss(animated: true, completion: nil)
     }
 }

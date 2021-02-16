@@ -12,22 +12,26 @@ class BasicViewController: UIViewController {
         let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
         let options = NavigationRouteOptions(coordinates: [origin, destination])
         
-        Directions.shared.calculate(options) { (waypoints, routes, error) in
-            guard let route = routes?.first, error == nil else {
-                print(error!.localizedDescription)
-                return
+        Directions.shared.calculate(options) { [weak self] (session, result) in
+            switch result {
+            case .failure(let error):
+                print(error.localizedDescription)
+            case .success(let response):
+                guard let route = response.routes?.first, let strongSelf = self else {
+                    return
+                }
+                
+                // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
+                // Since first route is retrieved from response `routeIndex` is set to 0.
+                let navigationService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, simulating: simulationIsEnabled ? .always : .onPoorGPS)
+                let navigationOptions = NavigationOptions(navigationService: navigationService)
+                let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: options, navigationOptions: navigationOptions)
+                navigationViewController.modalPresentationStyle = .fullScreen
+                // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
+                navigationViewController.routeLineTracksTraversal = true
+                
+                strongSelf.present(navigationViewController, animated: true, completion: nil)
             }
-            
-            let navigationController = NavigationViewController(for: route)
-            
-            // This allows the developer to simulate the route.
-            // Note: If copying and pasting this code in your own project,
-            // comment out `simulationIsEnabled` as it is defined elsewhere in this project.
-            if simulationIsEnabled {
-                navigationController.routeController.locationManager = SimulatedLocationManager(route: route)
-            }
-            
-            self.present(navigationController, animated: true, completion: nil)
         }
     }
 }

@@ -1,7 +1,10 @@
-platform :ios, '9.0'
+platform :ios, '10.0'
 use_frameworks!
 
+pod 'MapboxNavigation', '~> 1.0'
+
 target 'Navigation-Examples' do
-    pod 'MapboxCoreNavigation', '~> 0.20'
-    pod 'MapboxNavigation', '~> 0.20'
+end
+
+target 'DocsCode' do
 end

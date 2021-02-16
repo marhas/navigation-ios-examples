@@ -10,32 +10,35 @@ class CustomDestinationMarkerController: UIViewController {
         
         let origin = CLLocationCoordinate2DMake(37.77440680146262, -122.43539772352648)
         let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
-        let options = NavigationRouteOptions(coordinates: [origin, destination])
+        let routeOptions = NavigationRouteOptions(coordinates: [origin, destination])
         
-        Directions.shared.calculate(options) { (waypoints, routes, error) in
-            guard let route = routes?.first, error == nil else {
-                print(error!.localizedDescription)
-                return
+        Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
+            switch result {
+            case .failure(let error):
+                print(error.localizedDescription)
+            case .success(let response):
+                guard let route = response.routes?.first, let strongSelf = self else {
+                    return
+                }
+                
+                // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
+                let navigationService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, simulating: simulationIsEnabled ? .always : .onPoorGPS)
+                let navigationOptions = NavigationOptions(navigationService: navigationService)
+                let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navigationOptions)
+                navigationViewController.modalPresentationStyle = .fullScreen
+                navigationViewController.mapView?.delegate = strongSelf
+                navigationViewController.routeLineTracksTraversal = true
+                
+                strongSelf.present(navigationViewController, animated: true, completion: nil)
             }
-            
-            let navigationController = NavigationViewController(for: route)
-            navigationController.delegate = self
-            
-            // This allows the developer to simulate the route.
-            // Note: If copying and pasting this code in your own project,
-            // comment out `simulationIsEnabled` as it is defined elsewhere in this project.
-            if simulationIsEnabled {
-                navigationController.routeController.locationManager = SimulatedLocationManager(route: route)
-            }
-            
-            self.present(navigationController, animated: true, completion: nil)
         }
     }
 }
 
-extension CustomDestinationMarkerController: NavigationViewControllerDelegate {
-    func navigationViewController(_ navigationViewController: NavigationViewController, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        var annotationImage = navigationViewController.mapView!.dequeueReusableAnnotationImage(withIdentifier: "marker")
+extension CustomDestinationMarkerController: MGLMapViewDelegate {
+
+    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        var annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: "marker")
         
         if annotationImage == nil {
             // Leaning Tower of Pisa by Stefan Spieler from the Noun Project.

@@ -10,7 +10,7 @@ class EmbeddedExampleViewController: UIViewController {
     @IBOutlet weak var container: UIView!
     var route: Route?
 
-    lazy var options: NavigationRouteOptions = {
+    lazy var routeOptions: NavigationRouteOptions = {
         let origin = CLLocationCoordinate2DMake(37.77440680146262, -122.43539772352648)
         let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
         return NavigationRouteOptions(coordinates: [origin, destination])
@@ -28,17 +28,22 @@ class EmbeddedExampleViewController: UIViewController {
         calculateDirections()
     }
 
-    
     func calculateDirections() {
-        Directions.shared.calculate(options) { (waypoints, routes, error) in
-            guard let route = routes?.first, error == nil else {
-                print(error!.localizedDescription)
-                return
+        Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
+            switch result {
+            case .failure(let error):
+                print(error.localizedDescription)
+            case .success(let response):
+                guard let route = response.routes?.first, let strongSelf = self else {
+                    return
+                }
+                
+                strongSelf.route = route
+                strongSelf.startEmbeddedNavigation()
             }
-            self.route = route
-            self.startEmbeddedNavigation()
         }
     }
+    
     @objc func flashReroutedLabel(_ sender: Any) {
         reroutedLabel.isHidden = false
         reroutedLabel.alpha = 1.0
@@ -50,31 +55,32 @@ class EmbeddedExampleViewController: UIViewController {
     }
     
     func startEmbeddedNavigation() {
-        let nav = NavigationViewController(for: route!)
+        // For demonstration purposes, simulate locations if the Simulate Navigation option is on.
+        guard let route = route else { return }
+        let navigationService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, simulating: simulationIsEnabled ? .always : .onPoorGPS)
+        let navigationOptions = NavigationOptions(navigationService: navigationService)
+        let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navigationOptions)
         
-        // This allows the developer to simulate the route.
-        // Note: If copying and pasting this code in your own project,
-        // comment out `simulationIsEnabled` as it is defined elsewhere in this project.
-        if simulationIsEnabled {
-            nav.routeController.locationManager = SimulatedLocationManager(route: route!)
-        }
-        
-        nav.delegate = self
-        addChildViewController(nav)
-        container.addSubview(nav.view)
-        nav.view.translatesAutoresizingMaskIntoConstraints = false
+        navigationViewController.delegate = self
+        addChild(navigationViewController)
+        container.addSubview(navigationViewController.view)
+        navigationViewController.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            nav.view.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 0),
-            nav.view.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: 0),
-            nav.view.topAnchor.constraint(equalTo: container.topAnchor, constant: 0),
-            nav.view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 0)
-            ])
-        self.didMove(toParentViewController: self)
+            navigationViewController.view.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 0),
+            navigationViewController.view.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: 0),
+            navigationViewController.view.topAnchor.constraint(equalTo: container.topAnchor, constant: 0),
+            navigationViewController.view.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 0)
+        ])
+        self.didMove(toParent: self)
     }
 }
 
 extension EmbeddedExampleViewController: NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
         return enableReroutes.isOn
+    }
+    
+    func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
+        navigationController?.popViewController(animated: true)
     }
 }
