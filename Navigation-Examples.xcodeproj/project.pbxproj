@@ -11,6 +11,11 @@
 		2B521D4E24090A3A00984CF8 /* CustomBarsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B521D4D24090A3A00984CF8 /* CustomBarsViewController.swift */; };
 		2B521D502409240E00984CF8 /* CustomBottomBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B521D4F2409240E00984CF8 /* CustomBottomBannerView.swift */; };
 		2B521D522409242A00984CF8 /* CustomBottomBannerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2B521D512409242A00984CF8 /* CustomBottomBannerView.xib */; };
+		5FD9673525DA774100469421 /* EPMultiRouteNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD9673425DA774100469421 /* EPMultiRouteNavigationViewController.swift */; };
+		5FD9673B25DBB0AF00469421 /* EPNavigationSeparatesLegsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD9673A25DBB0AF00469421 /* EPNavigationSeparatesLegsViewController.swift */; };
+		5FFB39EB25D4183000825F5F /* EPNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFB39EA25D4183000825F5F /* EPNavigationViewController.swift */; };
+		5FFB39F525D527AA00825F5F /* UserLocationAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFB39F425D527AA00825F5F /* UserLocationAnnotationView.swift */; };
+		5FFB39FB25D55C0F00825F5F /* EPBasicNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FFB39FA25D55C0E00825F5F /* EPBasicNavigationViewController.swift */; };
 		8A33629624E4844E0086C647 /* Building-Extrusion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A33629524E4844E0086C647 /* Building-Extrusion.swift */; };
 		8A96379C2492B366008DEF2A /* Route-Deserialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A96379A2492B366008DEF2A /* Route-Deserialization.swift */; };
 		8A96379D2492B366008DEF2A /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A96379B2492B366008DEF2A /* route.json */; };
@@ -46,6 +51,12 @@
 		2B521D4D24090A3A00984CF8 /* CustomBarsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBarsViewController.swift; sourceTree = "<group>"; };
 		2B521D4F2409240E00984CF8 /* CustomBottomBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBottomBannerView.swift; sourceTree = "<group>"; };
 		2B521D512409242A00984CF8 /* CustomBottomBannerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomBottomBannerView.xib; sourceTree = "<group>"; };
+		5FD9673425DA774100469421 /* EPMultiRouteNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPMultiRouteNavigationViewController.swift; sourceTree = "<group>"; };
+		5FD9673A25DBB0AF00469421 /* EPNavigationSeparatesLegsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPNavigationSeparatesLegsViewController.swift; sourceTree = "<group>"; };
+		5FFB39EA25D4183000825F5F /* EPNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPNavigationViewController.swift; sourceTree = "<group>"; };
+		5FFB39F025D4225100825F5F /* parking-route-start.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "parking-route-start.gpx"; sourceTree = "<group>"; };
+		5FFB39F425D527AA00825F5F /* UserLocationAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationAnnotationView.swift; sourceTree = "<group>"; };
+		5FFB39FA25D55C0E00825F5F /* EPBasicNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EPBasicNavigationViewController.swift; sourceTree = "<group>"; };
 		8A33629524E4844E0086C647 /* Building-Extrusion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Building-Extrusion.swift"; sourceTree = "<group>"; };
 		8A96379A2492B366008DEF2A /* Route-Deserialization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Route-Deserialization.swift"; sourceTree = "<group>"; };
 		8A96379B2492B366008DEF2A /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
@@ -129,6 +140,19 @@
 			path = CustomBars;
 			sourceTree = "<group>";
 		};
+		5FFB39F325D5277B00825F5F /* EasyPark */ = {
+			isa = PBXGroup;
+			children = (
+				5FFB39EA25D4183000825F5F /* EPNavigationViewController.swift */,
+				5FD9673A25DBB0AF00469421 /* EPNavigationSeparatesLegsViewController.swift */,
+				5FD9673425DA774100469421 /* EPMultiRouteNavigationViewController.swift */,
+				5FFB39F425D527AA00825F5F /* UserLocationAnnotationView.swift */,
+				5FFB39FA25D55C0E00825F5F /* EPBasicNavigationViewController.swift */,
+				5FFB39F025D4225100825F5F /* parking-route-start.gpx */,
+			);
+			path = EasyPark;
+			sourceTree = "<group>";
+		};
 		8A5BBF6A2489B0A000FA4960 /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
@@ -207,6 +231,7 @@
 		C58FB86F1FE8A42500C4B491 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				5FFB39F325D5277B00825F5F /* EasyPark */,
 				C58FB8701FE8A43000C4B491 /* Basic.swift */,
 				C58FB8721FE98AEB00C4B491 /* Styled-UI-Elements.swift */,
 				C58FB8761FE98B0E00C4B491 /* Waypoint-Arrival-Screen.swift */,
@@ -353,32 +378,32 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Navigation-Examples/Pods-Navigation-Examples-frameworks.sh",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
-				"${PODS_ROOT}/MapboxAccounts/MapboxAccounts.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxCoreNavigation/MapboxCoreNavigation.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxDirections/MapboxDirections.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxMobileEvents/MapboxMobileEvents.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxNavigation/MapboxNavigation.framework",
-				"${PODS_ROOT}/MapboxNavigationNative/MapboxNavigationNative.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxSpeech/MapboxSpeech.framework",
 				"${BUILT_PRODUCTS_DIR}/Polyline/Polyline.framework",
 				"${BUILT_PRODUCTS_DIR}/Solar/Solar.framework",
 				"${BUILT_PRODUCTS_DIR}/Turf/Turf.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxAccounts/MapboxAccounts.framework/MapboxAccounts",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxCommon/MapboxCommon.framework/MapboxCommon",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxNavigationNative/MapboxNavigationNative.framework/MapboxNavigationNative",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxAccounts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCoreNavigation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxDirections.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMobileEvents.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigationNative.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxSpeech.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Polyline.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Solar.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Turf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxAccounts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCommon.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigationNative.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -457,7 +482,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$SRCROOT/Scripts/apply-mapbox-access-token.sh\n";
+			shellScript = "#$SRCROOT/Scripts/apply-mapbox-access-token.sh\n";
 		};
 		FA181ECD975B2CC291FDD3C8 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -467,32 +492,32 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-DocsCode/Pods-DocsCode-frameworks.sh",
 				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
-				"${PODS_ROOT}/MapboxAccounts/MapboxAccounts.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxCoreNavigation/MapboxCoreNavigation.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxDirections/MapboxDirections.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxMobileEvents/MapboxMobileEvents.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxNavigation/MapboxNavigation.framework",
-				"${PODS_ROOT}/MapboxNavigationNative/MapboxNavigationNative.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxSpeech/MapboxSpeech.framework",
 				"${BUILT_PRODUCTS_DIR}/Polyline/Polyline.framework",
 				"${BUILT_PRODUCTS_DIR}/Solar/Solar.framework",
 				"${BUILT_PRODUCTS_DIR}/Turf/Turf.framework",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxAccounts/MapboxAccounts.framework/MapboxAccounts",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxCommon/MapboxCommon.framework/MapboxCommon",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/MapboxNavigationNative/MapboxNavigationNative.framework/MapboxNavigationNative",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxAccounts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCoreNavigation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxDirections.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMobileEvents.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigationNative.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxSpeech.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Polyline.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Solar.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Turf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxAccounts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxCommon.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigationNative.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -516,10 +541,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5F130A01FE9B44600463E86 /* Constants.swift in Sources */,
+				5FFB39F525D527AA00825F5F /* UserLocationAnnotationView.swift in Sources */,
+				5FD9673525DA774100469421 /* EPMultiRouteNavigationViewController.swift in Sources */,
 				C58FB86E1FE89D9500C4B491 /* ExampleTableViewController.swift in Sources */,
 				C5C0D63820589422003A3B1D /* Custom-Server.swift in Sources */,
+				5FD9673B25DBB0AF00469421 /* EPNavigationSeparatesLegsViewController.swift in Sources */,
 				2B521D4E24090A3A00984CF8 /* CustomBarsViewController.swift in Sources */,
 				8A96379C2492B366008DEF2A /* Route-Deserialization.swift in Sources */,
+				5FFB39EB25D4183000825F5F /* EPNavigationViewController.swift in Sources */,
 				2B521D502409240E00984CF8 /* CustomBottomBannerView.swift in Sources */,
 				C58FB8771FE98B0E00C4B491 /* Waypoint-Arrival-Screen.swift in Sources */,
 				C5F130A61FEB2D7800463E86 /* Advanced.swift in Sources */,
@@ -531,6 +560,7 @@
 				C58FB8711FE8A43000C4B491 /* Basic.swift in Sources */,
 				C58FB8731FE98AEB00C4B491 /* Styled-UI-Elements.swift in Sources */,
 				C58FB85A1FE899B800C4B491 /* AppDelegate.swift in Sources */,
+				5FFB39FB25D55C0F00825F5F /* EPBasicNavigationViewController.swift in Sources */,
 				8A33629624E4844E0086C647 /* Building-Extrusion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

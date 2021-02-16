@@ -11,6 +11,42 @@ typealias NamedController = (
 
 let listOfExamples: [NamedController] = [
     (
+        name: "EPNavigation",
+        description:"""
+            Following route with separatesLegs = false
+        """,
+        controller: EPNavigationViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: false
+    ),
+    (
+        name: "EPNavigationSeparatesLegs",
+        description:"""
+            Following route with separatesLegs = true
+        """,
+        controller: EPNavigationSeparatesLegsViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: false
+    ),
+    (
+        name: "EPMultiRouteNavigationViewController",
+        description:"""
+            Experimenting...
+        """,
+        controller: EPMultiRouteNavigationViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: false
+    ),
+    (
+        name: "EPBasicNavigation",
+        description:"""
+            Playing around...
+        """,
+        controller: EPBasicNavigationViewController.self,
+        storyboard: nil,
+        pushExampleToViewController: false
+    ),
+    (
         name: "Advanced Implementation",
         description:"""
         Demonstrates how to display a custom map style and how to apply stylized components in the UI.
@@ -19,7 +55,7 @@ let listOfExamples: [NamedController] = [
         """,
         controller: AdvancedViewController.self,
         storyboard: nil,
-        pushExampleToViewController: true
+        pushExampleToViewController: false
     ),
     (
         name: "Basic",
