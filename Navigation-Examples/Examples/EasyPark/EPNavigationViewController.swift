@@ -10,6 +10,7 @@ class EPNavigationViewController: UIViewController {
     var navigationService: MapboxNavigationService?
     private let origin = CLLocationCoordinate2DMake(59.349102999999999, 18.113700999999999)
     private let destination = CLLocationCoordinate2DMake(59.347019000000003, 18.107286999999999)
+    private var routeVoiceController: RouteVoiceController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,7 +18,6 @@ class EPNavigationViewController: UIViewController {
         let mapView = NavigationMapView(frame: view.bounds)
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.userTrackingMode = .follow
-
         mapView.delegate = self
         mapView.tracksUserCourse = true
         self.mapView = mapView
@@ -61,6 +61,8 @@ class EPNavigationViewController: UIViewController {
 
         let navigationService = MapboxNavigationService(route: parkingRoute, routeIndex: 0, routeOptions: navigationRouteOptions, simulating: .always)
         navigationService.delegate = self
+        routeVoiceController = RouteVoiceController(navigationService: navigationService)
+        NavigationSettings.shared.voiceMuted = false
         navigationService.simulationSpeedMultiplier = 1.0
         navigationService.start()
         self.navigationService = navigationService
